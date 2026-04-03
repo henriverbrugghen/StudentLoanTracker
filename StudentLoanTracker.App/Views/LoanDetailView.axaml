@@ -1,0 +1,114 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:StudentLoanTracker.App.ViewModels"
+             xmlns:conv="using:Avalonia.Data.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="520" d:DesignHeight="480"
+             x:Class="StudentLoanTracker.App.Views.LoanDetailView"
+             x:DataType="vm:LoanDetailViewModel">
+
+    <Design.DataContext>
+        <vm:LoanDetailViewModel/>
+    </Design.DataContext>
+
+    <!-- Add/Edit loan: fields map 1:1 to the Loan entity; Save runs validation then repository. -->
+    <ScrollViewer>
+        <StackPanel Margin="20,16" Spacing="16" MaxWidth="480">
+            <StackPanel Spacing="6">
+                <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" />
+                <TextBlock Text="Fill in the basics below. You can always come back and edit later."
+                           FontSize="13"
+                           TextWrapping="Wrap"
+                           Opacity="0.8" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Loan name" FontWeight="SemiBold" />
+                <TextBox Text="{Binding Name}"
+                         Watermark="e.g. Undergrad Stafford"
+                         ToolTip.Tip="A short label you will recognize in the list" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Servicer / lender" FontWeight="SemiBold" />
+                <TextBox Text="{Binding Servicer}"
+                         Watermark="Company that holds the loan"
+                         ToolTip.Tip="Who you pay or where you log in to manage the loan" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Principal balance ($)" FontWeight="SemiBold" />
+                <TextBlock Text="Current amount owed before interest."
+                           FontSize="12" Opacity="0.75" TextWrapping="Wrap" />
+                <NumericUpDown Value="{Binding Principal}" Minimum="0" FormatString="0.00" Increment="100" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Annual interest rate (%)" FontWeight="SemiBold" />
+                <TextBlock Text="Enter as a percent (e.g. 5.5 for five point five percent)."
+                           FontSize="12" Opacity="0.75" TextWrapping="Wrap" />
+                <NumericUpDown Value="{Binding InterestRate}" Minimum="0" Maximum="30" FormatString="0.00" Increment="0.25" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Compounding" FontWeight="SemiBold" />
+                <TextBlock Text="How often interest is calculated (often Monthly for student loans)."
+                           FontSize="12" Opacity="0.75" TextWrapping="Wrap" />
+                <TextBox Text="{Binding Compounding}" Watermark="Monthly" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Minimum monthly payment ($)" FontWeight="SemiBold" />
+                <TextBlock Text="The payment your servicer requires each month."
+                           FontSize="12" Opacity="0.75" TextWrapping="Wrap" />
+                <NumericUpDown Value="{Binding MinimumPayment}" Minimum="0" FormatString="0.00" Increment="25" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Repayment start date" FontWeight="SemiBold" />
+                <DatePicker SelectedDate="{Binding StartDate}" ToolTip.Tip="First payment month for the schedule" />
+            </StackPanel>
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Term (months)" FontWeight="SemiBold" />
+                <TextBlock Text="Number of months in the standard payoff plan (used with principal and rate)."
+                           FontSize="12" Opacity="0.75" TextWrapping="Wrap" />
+                <NumericUpDown Value="{Binding TermMonths}" Minimum="1" Maximum="600" FormatString="N0" Increment="12" />
+            </StackPanel>
+
+            <CheckBox Content="This is a federal loan"
+                      IsChecked="{Binding IsFederal}"
+                      ToolTip.Tip="Optional flag for your own records" />
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Notes (optional)" FontWeight="SemiBold" />
+                <TextBox Text="{Binding Notes}"
+                         AcceptsReturn="True"
+                         MinHeight="72"
+                         Watermark="Account numbers, forgiveness programs, reminders…" />
+            </StackPanel>
+
+            <Border IsVisible="{Binding ValidationMessage, Converter={x:Static conv:ObjectConverters.IsNotNull}}"
+                    Background="{DynamicResource SystemControlBackgroundListLowBrush}"
+                    CornerRadius="6"
+                    Padding="12"
+                    Margin="0,4,0,0">
+                <TextBlock Text="{Binding ValidationMessage}"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource SystemControlErrorTextForegroundBrush}" />
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,8,0,0">
+                <Button Content="Save"
+                        Command="{Binding SaveCommand}"
+                        MinWidth="100"
+                        ToolTip.Tip="Validate and write to your local database" />
+                <Button Content="Cancel"
+                        Command="{Binding CancelCommand}"
+                        MinWidth="100"
+                        ToolTip.Tip="Go back without saving changes" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

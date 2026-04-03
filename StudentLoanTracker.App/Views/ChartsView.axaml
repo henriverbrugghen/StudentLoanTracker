@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:StudentLoanTracker.App.ViewModels"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="720" d:DesignHeight="520"
+             x:Class="StudentLoanTracker.App.Views.ChartsView"
+             x:DataType="vm:ChartsViewModel">
+
+    <Design.DataContext>
+        <vm:ChartsViewModel/>
+    </Design.DataContext>
+
+    <!-- Charts reuse the same amortization math as the schedule; LiveCharts renders series from the view model. -->
+    <Grid RowDefinitions="Auto,Auto,*" Margin="20,16">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" Margin="0,0,0,12">
+            <Button Content="← Back to loans"
+                    Command="{Binding BackCommand}"
+                    ToolTip.Tip="Return to the main list" />
+            <TextBlock Text="{Binding LoanName}"
+                       VerticalAlignment="Center"
+                       FontSize="18"
+                       FontWeight="SemiBold" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Spacing="10" Margin="0,0,0,12">
+            <TextBlock TextWrapping="Wrap"
+                       MaxWidth="900"
+                       Opacity="0.85"
+                       Text="Visual summary of the same payoff projection as the schedule. The line chart is balance after each payment; the pie compares total principal paid vs total interest." />
+            <Border Padding="12"
+                    CornerRadius="6"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                    <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" Text="Extra monthly payment ($)" />
+                    <NumericUpDown Value="{Binding ExtraMonthlyPayment}"
+                                   Minimum="0"
+                                   FormatString="0.00"
+                                   Width="120"
+                                   Increment="50"
+                                   ToolTip.Tip="Matches the schedule screen — charts update when this changes" />
+                    <TextBlock Text="Total principal:" VerticalAlignment="Center" Margin="12,0,0,0" />
+                    <TextBlock Text="{Binding TotalPrincipal, StringFormat={}{0:C2}}"
+                               VerticalAlignment="Center"
+                               FontWeight="SemiBold" />
+                    <TextBlock Text="Total interest:" VerticalAlignment="Center" Margin="12,0,0,0" />
+                    <TextBlock Text="{Binding TotalInterest, StringFormat={}{0:C2}}"
+                               VerticalAlignment="Center"
+                               FontWeight="SemiBold" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" RowSpacing="16">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Balance after each payment" FontWeight="SemiBold" />
+                <lvc:CartesianChart Series="{Binding BalanceSeries}" Height="240" />
+            </StackPanel>
+            <StackPanel Grid.Row="1" Spacing="8">
+                <TextBlock Text="Principal vs interest (totals over the life of the loan)" FontWeight="SemiBold" />
+                <lvc:PieChart Series="{Binding PrincipalInterestSeries}" Height="240" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

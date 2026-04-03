@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:StudentLoanTracker.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="500"
+             x:Class="StudentLoanTracker.App.Views.ScheduleView"
+             x:DataType="vm:ScheduleViewModel">
+
+    <Design.DataContext>
+        <vm:ScheduleViewModel/>
+    </Design.DataContext>
+
+    <!-- Payment schedule: each row is one month; extra payment reduces payoff time and total interest. -->
+    <Grid RowDefinitions="Auto,Auto,Auto,*" Margin="20,16">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" Margin="0,0,0,12">
+            <Button Content="← Back to loans"
+                    Command="{Binding BackCommand}"
+                    ToolTip.Tip="Return to the main list" />
+            <TextBlock Text="{Binding LoanName}"
+                       VerticalAlignment="Center"
+                       FontSize="18"
+                       FontWeight="SemiBold" />
+        </StackPanel>
+
+        <TextBlock Grid.Row="1"
+                   TextWrapping="Wrap"
+                   MaxWidth="900"
+                   Margin="0,0,0,12"
+                   Opacity="0.85"
+                   Text="The table shows how each payment splits between principal and interest, and how the balance drops over time. Try an extra monthly amount to see how much interest you could save." />
+
+        <Border Grid.Row="2"
+                Padding="12"
+                Margin="0,0,0,12"
+                CornerRadius="6"
+                BorderThickness="1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <StackPanel Orientation="Horizontal" Spacing="16" VerticalAlignment="Center">
+                <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" Text="Extra monthly payment ($)" />
+                <NumericUpDown Value="{Binding ExtraMonthlyPayment}"
+                               Minimum="0"
+                               FormatString="0.00"
+                               Width="120"
+                               Increment="50"
+                               ToolTip.Tip="Amount on top of the calculated payment; leave at 0 for the baseline schedule" />
+                <TextBlock Text="Total interest paid:" VerticalAlignment="Center" Margin="16,0,0,0" />
+                <TextBlock Text="{Binding TotalInterest, StringFormat={}{0:C2}}"
+                           VerticalAlignment="Center"
+                           FontWeight="SemiBold" />
+                <TextBlock Text="Payoff in" VerticalAlignment="Center" Margin="20,0,0,0" />
+                <TextBlock Text="{Binding PayoffMonths}" VerticalAlignment="Center" FontWeight="SemiBold" />
+                <TextBlock Text="months" VerticalAlignment="Center" />
+                <TextBlock Text="(" VerticalAlignment="Center" Margin="4,0,0,0" />
+                <TextBlock Text="{Binding PayoffDate, StringFormat='{}{0:MMMM dd yyyy}'}"
+                           VerticalAlignment="Center" />
+                <TextBlock Text=")" VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <DataGrid Grid.Row="3"
+                  ItemsSource="{Binding Schedule}"
+                  IsReadOnly="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  MinHeight="200">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="#" Binding="{Binding PaymentNumber}" Width="56" />
+                <DataGridTextColumn Header="Payment date" Binding="{Binding Date, StringFormat={}{0:yyyy-MM-dd}}" Width="120" />
+                <DataGridTextColumn Header="Payment" Binding="{Binding PaymentAmount, StringFormat={}{0:C2}}" Width="110" />
+                <DataGridTextColumn Header="To principal" Binding="{Binding PrincipalPortion, StringFormat={}{0:C2}}" Width="110" />
+                <DataGridTextColumn Header="To interest" Binding="{Binding InterestPortion, StringFormat={}{0:C2}}" Width="110" />
+                <DataGridTextColumn Header="Remaining balance" Binding="{Binding RemainingBalance, StringFormat={}{0:C2}}" Width="130" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

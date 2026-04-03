@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:StudentLoanTracker.App.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="640"
+        x:Class="StudentLoanTracker.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Student Loan Tracker"
+        Width="960" Height="640"
+        MinWidth="800" MinHeight="520">
+
+    <!-- Design-time DataContext so the previewer can resolve bindings -->
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <!-- Shell: top strip orients the app; current screen lives below -->
+    <Grid RowDefinitions="Auto,*">
+        <Border Grid.Row="0"
+                Padding="20,14"
+                BorderThickness="0,0,0,1"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Student Loan Tracker"
+                           FontSize="22"
+                           FontWeight="SemiBold" />
+                <TextBlock Text="See your loans, run payoff schedules, and explore charts — all stored locally on your computer."
+                           FontSize="13"
+                           TextWrapping="Wrap"
+                           Opacity="0.75"
+                           MaxWidth="720" />
+            </StackPanel>
+        </Border>
+        <ContentControl Grid.Row="1"
+                        Content="{Binding CurrentViewModel}"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch" />
+    </Grid>
+</Window>

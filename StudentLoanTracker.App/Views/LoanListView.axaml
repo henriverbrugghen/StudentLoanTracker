@@ -1,0 +1,102 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:StudentLoanTracker.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="StudentLoanTracker.App.Views.LoanListView"
+             x:DataType="vm:LoanListViewModel">
+
+    <Design.DataContext>
+        <vm:LoanListViewModel/>
+    </Design.DataContext>
+
+    <!-- Main list screen: toolbar + either the grid or a friendly empty state -->
+    <Grid RowDefinitions="Auto,*" Margin="20,16">
+        <StackPanel Grid.Row="0" Spacing="12" Margin="0,0,0,16">
+            <TextBlock Text="Your loans"
+                       FontSize="18"
+                       FontWeight="SemiBold" />
+            <TextBlock Text="Select a row to edit, delete, open the payment schedule, or charts. Tip: start with Add Loan if this is your first time."
+                       FontSize="13"
+                       TextWrapping="Wrap"
+                       Opacity="0.8"
+                       MaxWidth="880" />
+            <WrapPanel Orientation="Horizontal" LineSpacing="8" ItemSpacing="8">
+                <Button Content="Add loan"
+                        Command="{Binding AddLoanCommand}"
+                        ToolTip.Tip="Create a new loan record" />
+                <Button Content="Edit"
+                        Command="{Binding EditLoanCommand}"
+                        ToolTip.Tip="Change the selected loan's details" />
+                <Button Content="Delete"
+                        Command="{Binding DeleteLoanCommand}"
+                        ToolTip.Tip="Remove the selected loan from the list" />
+                <Button Content="Refresh"
+                        Command="{Binding RefreshCommand}"
+                        ToolTip.Tip="Reload loans from the database" />
+                <Button Content="Payment schedule"
+                        Command="{Binding ViewScheduleCommand}"
+                        ToolTip.Tip="Month-by-month breakdown and payoff date" />
+                <Button Content="Charts"
+                        Command="{Binding ViewChartsCommand}"
+                        ToolTip.Tip="Balance over time and principal vs interest" />
+            </WrapPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="1" RowDefinitions="*,Auto">
+            <!-- Loan table (hidden when there is nothing to show) -->
+            <DataGrid ItemsSource="{Binding Loans}"
+                      SelectedItem="{Binding SelectedLoan}"
+                      IsReadOnly="True"
+                      Grid.Row="0"
+                      IsVisible="{Binding HasLoans}"
+                      CanUserReorderColumns="True"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True"
+                      MinHeight="200">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="Servicer" Binding="{Binding Servicer}" Width="*" />
+                    <DataGridTextColumn Header="Principal" Binding="{Binding Principal, StringFormat={}{0:C2}}" Width="120" />
+                    <DataGridTextColumn Header="Rate % (annual)" Binding="{Binding InterestRate, StringFormat={}{0:F2}}" Width="120" />
+                    <DataGridTextColumn Header="Term (months)" Binding="{Binding TermMonths}" Width="110" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Empty state: welcoming copy instead of a blank panel -->
+            <Border Grid.Row="0"
+                    IsVisible="{Binding ShowEmptyState}"
+                    CornerRadius="8"
+                    Padding="28"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    BorderThickness="1"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                    Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
+                <StackPanel VerticalAlignment="Center" Spacing="12" MaxWidth="420" HorizontalAlignment="Center">
+                    <TextBlock Text="No loans yet"
+                               FontSize="20"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center" />
+                    <TextBlock TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               Opacity="0.85"
+                               Text="When you add a loan, it will appear in the table here. You can then open schedules and charts to plan extra payments." />
+                    <Button Content="Add your first loan"
+                            Command="{Binding AddLoanCommand}"
+                            HorizontalAlignment="Center"
+                            MinWidth="200"
+                            Margin="0,8,0,0" />
+                </StackPanel>
+            </Border>
+
+            <!-- Errors and confirmations (see HasStatusMessage on the view model) -->
+            <TextBlock Grid.Row="1"
+                       Text="{Binding StatusMessage}"
+                       Margin="0,12,0,0"
+                       TextWrapping="Wrap"
+                       IsVisible="{Binding HasStatusMessage}" />
+        </Grid>
+    </Grid>
+</UserControl>
