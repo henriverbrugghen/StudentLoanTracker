@@ -1,6 +1,5 @@
-=========================================================
-  STUDENT LOAN TRACKER — INTRODUCTION AND PROJECT GUIDE
-=========================================================
+STUDENT LOAN TRACKER — INTRODUCTION AND PROJECT GUIDE
+
 
 Welcome. This file is a first look at the Student Loan Tracker: what it is,
 how it is built, how to clone and run it, and what each source file is for.
@@ -301,6 +300,4 @@ VIEWMODELS AND AUTO-GENERATED CODE
   class file in ViewModels\; the generator fills in the repetitive
   INotifyPropertyChanged and ICommand wiring.
 
-==================
-  END OF READ_ME
-==================
+END OF READ_ME
