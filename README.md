@@ -33,7 +33,7 @@ HOW TO CLONE AND RUN
       if you prefer an IDE over the command line.
 
   Clone
-    git clone https://github.com/Ghostboy05218/StudentLoanTracker.git
+    git clone https://github.com/henriverbrugghen/StudentLoanTracker.git
     cd StudentLoanTracker
 
   Run from the command line
@@ -126,7 +126,7 @@ ROOT
     Solution file that lists the three projects and their build configurations.
     Open this in Visual Studio, or pass it to `dotnet build` / `dotnet run`.
 
-  READ_ME.txt
+  READ_ME.md
     This introduction and map of the codebase.
 
   .gitignore / .gitattributes (if present)
